@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Success</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<style>
+	body {
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    height: 100vh;
+	    background: linear-gradient(to right, #F9FAFB, #eef6f6);
+	    font-family: 'Inter', sans-serif;
+	    margin: 0;
+	}
+
+	/* MAIN BOX */
+	.box {
+	    background: white;
+	    padding: 50px 40px;
+	    border-radius: 18px;
+	    text-align: center;
+	    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+	    animation: pop 0.6s ease;
+	}
+
+	/* ANIMATION */
+	@keyframes pop {
+	    from {
+	        transform: scale(0.8);
+	        opacity: 0;
+	    }
+	    to {
+	        transform: scale(1);
+	        opacity: 1;
+	    }
+	}
+
+	/* SUCCESS ICON */
+	.checkmark {
+	    font-size: 60px;
+	    color: #2E4F4F;
+	    animation: bounce 1s ease;
+	}
+
+	@keyframes bounce {
+	    0% { transform: scale(0); }
+	    60% { transform: scale(1.2); }
+	    100% { transform: scale(1); }
+	}
+
+	/* TEXT */
+	.box h1 {
+	    margin: 15px 0 10px;
+	    font-family: 'Playfair Display', serif;
+	    color: #2E4F4F;
+	}
+
+	.box p {
+	    color: #555;
+	    font-size: 15px;
+	}
+
+	/* BUTTON */
+	.btn {
+	    background: #2E4F4F;
+	    color: white;
+	    padding: 12px 25px;
+	    text-decoration: none;
+	    border-radius: 8px;
+	    display: inline-block;
+	    margin-top: 20px;
+	    transition: 0.3s;
+	    font-weight: 500;
+	}
+
+	.btn:hover {
+	    background: #1f3a3a;
+	}
+</style>
+</head>
+
+<body>
+
+	<div class="checkmark">✔</div>
+	<h1>Booking Confirmed</h1>
+	<p>Your reservation has been successfully completed.</p>
+
+	<a href="/user/bookings" class="btn">View My Bookings</a>
+
+</body>
+</html>

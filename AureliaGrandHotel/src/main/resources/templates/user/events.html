@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Our Events - Aurelia Grand</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" href="/css/fragments.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+	:root {
+	    --primary: #2E4F4F;
+	    --accent: #A7C4BC;
+	    --bg: #F9FAFB;
+	    --text: #2C3333;
+	    --white: #ffffff;
+	}
+
+	/* GLOBAL */
+	body {
+	    margin: 0;
+	    font-family: 'Inter', sans-serif;
+	    background: var(--bg);
+	    color: var(--text);
+	}
+
+	h1, h2, h3 {
+	    font-family: 'Playfair Display', serif;
+	}
+
+	/* HERO */
+	/* HERO */
+	.hero {
+	    min-height: 55vh;
+	    background: url('/images/hero/banner1.png') center/cover no-repeat;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    position: relative;
+	}
+
+	/* STRONGER, SMART OVERLAY */
+	.hero::after {
+	    content: "";
+	    position: absolute;
+	    inset: 0;
+	    background: linear-gradient(
+	        rgba(0,0,0,0.65),
+	        rgba(0,0,0,0.5)
+	    );
+	    z-index: 1;
+	}
+
+	/* TEXT */
+	.hero h1 {
+	    position: relative;
+	    z-index: 2;
+
+	    /* Slightly soft white instead of pure white */
+	    color: #f1ede7;
+
+	    font-size: clamp(36px, 6vw, 56px);
+	    font-weight: 600;
+	    letter-spacing: 1px;
+	    text-align: center;
+
+	    /* Softer shadow (less harsh) */
+	    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+	}
+	/* CONTAINER */
+	.container {
+	    max-width: 1200px;
+	    margin: auto;
+	    padding: 60px 20px;
+	}
+
+	/* SECTION TITLE */
+	.container h2 {
+	    text-align: center;
+	    font-size: 2rem;
+	    margin-bottom: 40px;
+	}
+
+	/* EVENTS GRID */
+	.events {
+	    display: grid;
+	    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	    gap: 30px;
+	}
+
+	/* EVENT CARD */
+	.event-card {
+	    background: var(--white);
+	    border-radius: 16px;
+	    overflow: hidden;
+	    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+	    transition: all 0.35s ease;
+	}
+
+	.event-card:hover {
+	    transform: translateY(-10px) scale(1.02);
+	}
+
+	/* IMAGE */
+	.event-card img {
+	    width: 100%;
+	    height: 220px;
+	    object-fit: cover;
+	}
+
+	/* CONTENT */
+	.event-content {
+	    padding: 22px;
+	}
+
+	.event-content h3 {
+	    margin: 0 0 10px;
+	    font-size: 1.4rem;
+	}
+
+	.event-content p {
+	    font-size: 14px;
+	    color: #555;
+	}
+
+	/* LOCATION */
+	.location {
+	    margin-top: 10px;
+	    font-size: 13px;
+	    color: #777;
+	}
+
+	/* PRICE */
+	.price {
+	    margin-top: 12px;
+	    font-size: 16px;
+	    font-weight: 600;
+	    color: var(--primary);
+	}
+
+	/* REVIEWS */
+	.reviews {
+	    margin-top: 70px;
+	    display: flex;
+	    gap: 25px;
+	    flex-wrap: wrap;
+	    justify-content: center;
+	}
+
+	/* REVIEW CARD */
+	.review-card {
+	    background: white;
+	    padding: 25px;
+	    width: 300px;
+	    border-radius: 14px;
+	    box-shadow: 0 6px 25px rgba(0,0,0,0.06);
+	    transition: 0.3s;
+	}
+
+	.review-card:hover {
+	    transform: translateY(-6px);
+	}
+
+	.review-card p {
+	    font-style: italic;
+	    color: #555;
+	}
+
+	.review-card h4 {
+	    margin-top: 15px;
+	    color: var(--primary);
+	}
+
+	/* RESPONSIVE */
+	@media (max-width: 768px) {
+	    .hero h1 {
+	        font-size: 2rem;
+	        text-align: center;
+	    }
+	}
+	</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div th:replace="~{user/fragments :: navbar}"></div>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Our Events</h1>
+</section>
+
+<!-- EVENTS SECTION -->
+<div class="container">
+
+    <h2 style="text-align:center;">Luxury Events & Celebrations</h2>
+
+    <div class="events">
+
+        <!-- DYNAMIC EVENTS -->
+        <div class="event-card" th:each="e : ${events}">
+			<img th:src="@{'/uploads/events/' + ${e.image}}"
+			     onerror="this.src='/images/events/default.jpg'">
+
+            <div class="event-content">
+                <h3 th:text="${e.name}"></h3>
+
+                <p th:text="${e.description}"></p>
+
+                <p class="location">
+                    📍 <span th:text="${e.location}"></span>
+                </p>
+
+                <p class="price">
+                    ₹<span th:text="${e.price}"></span>
+                </p>
+            </div>
+        </div>
+</div>
+        
+
+    <!-- REVIEWS -->
+    <h2 style="text-align:center; margin-top:60px;">Guest Reviews</h2>
+
+    <div class="reviews">
+
+        <div class="review-card">
+            <p>"Our wedding event was absolutely magical and well organized."</p>
+            <h4>- Ankit & Riya</h4>
+        </div>
+
+        <div class="review-card">
+            <p>"Perfect place for corporate meetings with premium facilities."</p>
+            <h4>- Rahul Mehta</h4>
+        </div>
+
+        <div class="review-card">
+            <p>"The party arrangement and food quality were top class."</p>
+            <h4>- Sneha Kapoor</h4>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div th:replace="~{user/fragments :: footer}"></div>
+
+</body>
+</html>

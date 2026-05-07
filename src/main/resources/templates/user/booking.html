@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>My Bookings</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/fragments.css">
+
+<style>
+:root {
+    --primary:#2F5D50;
+    --accent:#C7A17A;
+    --bg:#F8F6F2;
+    --white:#fff;
+    --text:#1E1E1E;
+    --sub:#6B6B6B;
+    --border:#E5E0DA;
+}
+
+body { margin:0; font-family:'Inter'; background:var(--bg); }
+
+/* HERO */
+.hero {
+    height:50vh;
+    background:url('/images/hero/banner1.png') center/cover;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+.hero::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+}
+.hero h1 {
+    color:#f1ede7;
+    font-size:48px;
+    z-index:2;
+}
+
+/* CONTAINER */
+.container {
+    max-width:1200px;
+    margin:auto;
+    padding:60px 20px;
+}
+
+/* GRID */
+.booking-list {
+    display:grid;
+    gap:25px;
+}
+
+/* CARD */
+.booking-card {
+    display:flex;
+    background:var(--white);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.06);
+    transition:.3s;
+}
+.booking-card:hover {
+    transform:translateY(-6px);
+}
+
+/* IMAGE */
+.booking-img {
+    width:260px;
+    height:200px;
+    object-fit:cover;
+}
+
+/* CONTENT */
+.booking-content {
+    padding:20px;
+    flex:1;
+}
+
+.booking-content h3 {
+    margin-bottom:10px;
+}
+
+/* STATUS */
+.status {
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    margin-top:8px;
+}
+
+.pending { background:#fff3cd; color:#856404; }
+.approved { background:#d4edda; color:#2e7d32; }
+.cancelled { background:#f8d7da; color:#c0392b; }
+
+/* BUTTONS */
+.btn {
+    padding:8px 15px;
+    border-radius:6px;
+    text-decoration:none;
+    font-size:13px;
+    margin-top:10px;
+    display:inline-block;
+}
+
+.cancel { background:#e74c3c; color:white; }
+.pay { background:#27ae60; color:white; }
+
+/* EMPTY */
+.empty {
+    text-align:center;
+    padding:50px;
+    color:#777;
+}
+</style>
+
+</head>
+
+<body>
+
+<div th:replace="~{user/fragments :: navbar}"></div>
+
+<section class="hero">
+    <h1>My Bookings</h1>
+</section>
+
+<div class="container">
+
+<h2>Your Reservations</h2>
+
+<!-- EMPTY -->
+
+<div th:if="${!hasBookings}" class="empty">
+    No bookings yet 😔 <br><br>
+    <a href="/user/rooms" class="btn pay">Book Now</a>
+</div>
+
+<div class="booking-list">
+
+<div class="booking-card" th:each="b : ${bookings}">
+
+<img th:src="@{'/uploads/rooms/' + ${b.room.image}}" class="booking-img">
+
+<div class="booking-content">
+
+<h3 th:text="${b.room.type}"></h3>
+
+<p>👤 Name: <span th:text="${b.guestName}"></span></p>
+<p>📞 Phone: <span th:text="${b.phone}"></span></p>
+
+<p th:if="${b.specialRequest != null}">
+📝 Request: <span th:text="${b.specialRequest}"></span>
+</p>
+
+<p>🏨 Room: <span th:text="${b.room.roomNumber}"></span></p>
+<p>👤 Guests: <span th:text="${b.guests}"></span></p>
+
+<!-- SERVICES -->
+
+<div th:if="${b.services != null and !#lists.isEmpty(b.services)}">
+    <p><strong>🛎 Services:</strong></p>
+    <ul>
+        <li th:each="s : ${b.services}">
+            <span th:text="${s.name}"></span> - ₹ <span th:text="${s.price}"></span>
+        </li>
+    </ul>
+</div>
+
+<!-- EVENTS -->
+
+<div th:if="${b.events != null and !#lists.isEmpty(b.events)}">
+    <p><strong>🎉 Events:</strong></p>
+    <ul>
+        <li th:each="e : ${b.events}">
+            <span th:text="${e.name}"></span> - ₹ <span th:text="${e.price}"></span>
+        </li>
+    </ul>
+</div>
+
+<p>📅 Check-In:
+<span th:text="${#temporals.format(b.checkIn, 'dd MMM yyyy')}"></span></p>
+
+<p>📅 Check-Out:
+<span th:text="${#temporals.format(b.checkOut, 'dd MMM yyyy')}"></span></p>
+
+<p>🕒 Days: <span th:text="${b.totalDays}"></span></p>
+
+<p>💰 Total: ₹ <span th:text="${b.totalPrice}"></span></p>
+
+<!-- STATUS -->
+
+<span th:text="${b.status}"
+   th:class="'status ' + ${b.status.toLowerCase()}"></span>
+
+<br>
+
+<!-- PAYMENT -->
+
+<p>
+💳 Payment:
+<strong th:text="${b.paymentStatus}"></strong>
+</p>
+
+<!-- REFUND STATUS -->
+
+<p th:if="${b.refundStatus != null and b.refundStatus != 'NONE'}">
+🔁 Refund:
+<strong th:text="${b.refundStatus}"></strong>
+
+<span th:if="${b.refundAmount != null}">
+(₹ <span th:text="${b.refundAmount}"></span>)
+</span>
+</p>
+
+<!-- ACTIONS -->
+
+<div>
+
+<!-- PAY NOW -->
+
+<a th:if="${b.paymentStatus == 'UNPAID'}"
+th:href="@{'/user/payment/' + ${b.id}}"
+class="btn pay">
+Pay Now </a>
+
+<!-- CANCEL -->
+
+<a th:if="${b.status == 'PENDING'}"
+th:href="@{'/user/cancel-booking/' + ${b.id}}"
+class="btn cancel">
+Cancel </a>
+
+<!-- REFUND REQUEST -->
+
+<form th:if="${b.paymentStatus == 'PAID' and b.status == 'CONFIRMED' and b.refundStatus == 'NONE'}"
+      action="/user/refund-request"
+      method="post"
+      style="margin-top:10px;">
+
+<input type="hidden" name="bookingId" th:value="${b.id}">
+
+<select name="reason" required style="padding:6px; border-radius:5px;">
+    <option value="">Select Reason</option>
+    <option>Change of plans</option>
+    <option>Emergency</option>
+    <option>Wrong booking</option>
+</select>
+
+<button type="submit" class="btn cancel">Request Refund</button>
+
+
+</form>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div th:replace="~{user/fragments :: footer}"></div>
+
+</body>
+</html>

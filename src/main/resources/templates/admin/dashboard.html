@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Admin Dashboard</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    :root {
+        --primary: #2E4F4F;
+        --bg: #F4F6F9;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+    }
+
+    .container {
+        padding: 30px;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    /* CARDS */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .card h3 {
+        font-size: 14px;
+        color: #777;
+    }
+
+    .card h1 {
+        margin-top: 10px;
+        color: var(--primary);
+    }
+
+    /* CHART */
+    .chart-box {
+        margin-top: 40px;
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+    }
+
+    /* TABLE */
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background: var(--primary);
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- ✅ FIXED NAVBAR -->
+<div th:replace="admin/fragments :: navbar"></div>
+
+<div class="container">
+
+<h2>Admin Dashboard</h2>
+
+<!-- ✅ STATS -->
+<div class="stats">
+
+    <div class="card">
+        <h3>Total Users</h3>
+        <h1 th:text="${users}"></h1>
+    </div>
+
+    <div class="card">
+        <h3>Total Rooms</h3>
+        <h1 th:text="${rooms}"></h1>
+    </div>
+
+    <div class="card">
+        <h3>Total Bookings</h3>
+        <h1 th:text="${bookings}"></h1>
+    </div>
+
+    <div class="card">
+        <h3>Total Revenue</h3>
+        <h1>₹<span th:text="${revenue}"></span></h1>
+    </div>
+
+</div>
+
+<!-- 📊 CHART -->
+<div class="chart-box">
+    <h3>Booking Analytics</h3>
+    <canvas id="bookingChart"></canvas>
+</div>
+
+<!-- 📅 RECENT BOOKINGS -->
+<h2>Recent Bookings</h2>
+
+<table>
+<tr>
+<th>Room</th>
+<th>Check-In</th>
+<th>Total</th>
+</tr>
+
+<tr th:each="b : ${recentBookings}">
+<td th:text="${b.room.type}"></td>
+<td th:text="${b.checkIn}"></td>
+<td>₹<span th:text="${b.totalPrice}"></span></td>
+</tr>
+
+</table>
+
+</div>
+
+<div th:replace="admin/fragments :: footer"></div>
+
+<!-- CHART SCRIPT -->
+<script>
+    const ctx = document.getElementById('bookingChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Rooms', 'Bookings', 'Users'],
+            datasets: [{
+                label: 'System Data',
+                data: [
+                    [[${rooms}]],
+                    [[${bookings}]],
+                    [[${users}]]
+                ]
+            }]
+        }
+    });
+</script>
+
+</body>
+</html>

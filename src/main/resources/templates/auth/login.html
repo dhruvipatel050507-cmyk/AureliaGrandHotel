@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login - Aurelia Grand Hotel</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: url('/images/hotel.jpg') no-repeat center center/cover;
+            height: 100vh;
+        }
+
+        .overlay {
+            background: rgba(0,0,0,0.6);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            width: 400px;
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            color: white;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            margin-bottom: 20px;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: var(--accent);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .login-card button:hover {
+            opacity: 0.9;
+        }
+
+        .login-card a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .error {
+            color: #ff6b6b;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: #4cd137;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+    <div class="login-card">
+
+        <h2>Welcome to Aurelia Grand</h2>
+        <p style="font-size:14px; opacity:0.8;">Luxury Experience Awaits You</p>
+
+        <form action="/doLogin" method="post">
+
+            <input type="email" name="email" placeholder="Enter Email" required>
+            <input type="password" name="password" placeholder="Enter Password" required>
+
+            <button type="submit">Login</button>
+
+        </form>
+
+        <!-- ERROR MESSAGE -->
+        <p class="error" th:text="${error}"></p>
+
+        <!-- SUCCESS MESSAGE -->
+        <p class="success" th:text="${success}"></p>
+
+        <p style="margin-top:15px; font-size:14px;">
+            Don’t have an account?
+            <a href="/signup">Create Account</a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

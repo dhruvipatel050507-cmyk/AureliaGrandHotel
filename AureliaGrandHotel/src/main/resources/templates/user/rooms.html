@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Rooms - Aurelia Grand</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" href="/css/fragments.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+	<style>
+
+	/* ===== GLOBAL ===== */
+	body {
+	    margin: 0;
+	    font-family: 'Inter', sans-serif;
+	    background: #F8F6F2;
+	    color: #1E1E1E;
+	}
+
+	/* ===== HERO ===== */
+	/* HERO */
+	.hero {
+	    min-height: 55vh;
+	    background: url('/images/hero/banner1.png') center/cover no-repeat;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    position: relative;
+	}
+
+	/* STRONGER, SMART OVERLAY */
+	.hero::after {
+	    content: "";
+	    position: absolute;
+	    inset: 0;
+	    background: linear-gradient(
+	        rgba(0,0,0,0.65),
+	        rgba(0,0,0,0.5)
+	    );
+	    z-index: 1;
+	}
+
+	/* TEXT */
+	.hero h1 {
+	    position: relative;
+	    z-index: 2;
+
+	    /* Slightly soft white instead of pure white */
+	    color: #f1ede7;
+
+	    font-size: clamp(36px, 6vw, 56px);
+	    font-weight: 600;
+	    letter-spacing: 1px;
+	    text-align: center;
+
+	    /* Softer shadow (less harsh) */
+	    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+	}
+	/* ===== CONTAINER ===== */
+	.container {
+	    padding: 80px;
+	}
+
+	/* ===== SECTION TITLE ===== */
+	.section-title {
+	    text-align: center;
+	    font-size: 36px;
+	    font-family: 'Playfair Display', serif;
+	    margin-bottom: 40px;
+	}
+
+	/* ===== FILTER ===== */
+	.search-filter {
+	    display: flex;
+	    gap: 15px;
+	    margin-bottom: 50px;
+	    justify-content: center;
+	}
+
+	.search-filter input,
+	.search-filter select {
+	    padding: 12px;
+	    border-radius: 10px;
+	    border: 1px solid #E5E0DA;
+	    min-width: 200px;
+	}
+
+	.search-filter input:focus,
+	.search-filter select:focus {
+	    border-color: #2F5D50;
+	}
+
+	/* ===== ROOMS GRID ===== */
+	.rooms {
+	    display: grid;
+	    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	    gap: 35px;
+	}
+
+	/* ===== ROOM CARD ===== */
+	.room-card {
+	    background: white;
+	    border-radius: 18px;
+	    overflow: hidden;
+	    box-shadow: 0 12px 35px rgba(0,0,0,0.06);
+	    transition: 0.4s;
+	    position: relative;
+	}
+
+	.room-card:hover {
+	    transform: translateY(-10px);
+	}
+
+	/* IMAGE */
+	.room-card img {
+	    width: 100%;
+	    height: 230px;
+	    object-fit: cover;
+	}
+
+	/* BADGE */
+	.room-card::before {
+	    content: "Suite";
+	    position: absolute;
+	    top: 15px;
+	    left: 15px;
+	    background: #2F5D50;
+	    color: white;
+	    padding: 6px 12px;
+	    font-size: 12px;
+	    border-radius: 6px;
+	}
+
+	/* CONTENT */
+	.room-content {
+	    padding: 20px;
+	}
+
+	/* TITLE */
+	.room-content h3 {
+	    margin: 0;
+	    font-size: 20px;
+	    font-family: 'Playfair Display', serif;
+	}
+
+	/* ROOM NUMBER */
+	.room-content p {
+	    margin: 6px 0;
+	    font-size: 14px;
+	    color: #666;
+	}
+
+	/* PRICE ROW */
+	.price-row {
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
+	    margin-top: 10px;
+	}
+
+	/* PRICE */
+	.price {
+	    color: #2F5D50;
+	    font-weight: bold;
+	    font-size: 20px;
+	}
+
+	/* RATING */
+	.rating {
+	    font-size: 14px;
+	    color: #C7A17A;
+	}
+
+	/* REVIEW */
+	.review {
+	    font-size: 13px;
+	    color: #888;
+	    margin-top: 5px;
+	}
+
+	/* BUTTON */
+	.btn {
+	    display: block;
+	    text-align: center;
+	    margin-top: 15px;
+	    padding: 12px;
+	    background: #2F5D50;
+	    color: white;
+	    text-decoration: none;
+	    border-radius: 10px;
+	    transition: 0.3s;
+	}
+
+	.btn:hover {
+	    background: #3E7C6D;
+	}
+
+	</style>
+
+	
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div th:replace="~{user/fragments :: navbar}"></div>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Our Rooms</h1>
+</section>
+
+<!-- CONTENT -->
+<div class="container">
+
+	<h2 class="section-title">Rooms & Suites</h2>
+
+    <!-- SEARCH + FILTER -->
+    <div class="search-filter">
+        <input type="text" id="searchInput" placeholder="Search rooms...">
+
+        <select id="priceFilter">
+            <option value="">All Prices</option>
+            <option value="low">Below ₹3000</option>
+            <option value="mid">₹3000 - ₹7000</option>
+            <option value="high">Above ₹7000</option>
+        </select>
+
+        <select id="sortPrice">
+            <option value="">Sort By</option>
+            <option value="low">Price Low → High</option>
+            <option value="high">Price High → Low</option>
+        </select>
+    </div>
+
+    <!-- ROOMS -->
+    <div class="rooms" id="roomList">
+
+        <div class="room-card" th:each="room : ${rooms}">
+			<img th:src="@{'/uploads/rooms/' + ${room.image}}">
+
+            <div class="room-content">
+                <h3 th:text="${room.type}"></h3>
+
+                <p>Room No: <span th:text="${room.roomNumber}"></span></p>
+
+				<div class="price-row">
+				    <div class="price">₹<span th:text="${room.price}"></span></div>
+				    <div class="rating">⭐ 4.5</div>
+				</div>
+
+				<div class="review">
+				    120 Reviews
+				</div>
+
+                <a th:href="@{'/user/room/' + ${room.id}}" class="btn">View Details</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
+    const searchInput = document.getElementById("searchInput");
+    const priceFilter = document.getElementById("priceFilter");
+    const sortPrice = document.getElementById("sortPrice");
+
+    searchInput.addEventListener("keyup", filterRooms);
+    priceFilter.addEventListener("change", filterRooms);
+    sortPrice.addEventListener("change", sortRooms);
+
+    function filterRooms() {
+        let search = searchInput.value.toLowerCase();
+        let price = priceFilter.value;
+
+        let cards = document.querySelectorAll(".room-card");
+
+        cards.forEach(card => {
+            let text = card.innerText.toLowerCase();
+            let roomPrice = parseInt(card.querySelector(".price span")?.innerText || 0);
+
+            let matchSearch = text.includes(search);
+            let matchPrice = true;
+
+            if (price === "low") matchPrice = roomPrice < 3000;
+            if (price === "mid") matchPrice = roomPrice >= 3000 && roomPrice <= 7000;
+            if (price === "high") matchPrice = roomPrice > 7000;
+
+            card.style.display = (matchSearch && matchPrice) ? "" : "none";
+        });
+    }
+
+    function sortRooms() {
+        let container = document.getElementById("roomList");
+        let cards = Array.from(container.children);
+
+        let type = sortPrice.value;
+
+        cards.sort((a, b) => {
+            let priceA = parseInt(a.querySelector(".price span").innerText);
+            let priceB = parseInt(b.querySelector(".price span").innerText);
+
+            return type === "low" ? priceA - priceB : priceB - priceA;
+        });
+
+        cards.forEach(card => container.appendChild(card));
+    }
+</script>
+
+<!-- FOOTER -->
+<div th:replace="~{user/fragments :: footer}"></div>
+
+</body>
+</html>

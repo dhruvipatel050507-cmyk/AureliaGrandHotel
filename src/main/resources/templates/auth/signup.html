@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Signup - Aurelia Grand Hotel</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: url('/images/hotel.jpg') no-repeat center center/cover;
+            height: 100vh;
+        }
+
+        .overlay {
+            background: rgba(0,0,0,0.6);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .signup-card {
+            width: 420px;
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            color: white;
+            text-align: center;
+        }
+
+        .signup-card h2 {
+            margin-bottom: 20px;
+        }
+
+        .signup-card input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .signup-card button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: var(--accent);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .signup-card button:hover {
+            opacity: 0.9;
+        }
+
+        .signup-card a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .error {
+            color: #ff6b6b;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: #4cd137;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+    <div class="signup-card">
+
+        <h2>Create Your Account</h2>
+        <p style="font-size:14px; opacity:0.8;">Join Aurelia Grand Luxury Experience</p>
+
+        <form action="/register" method="post" th:object="${user}">
+
+            <input type="text" th:field="*{name}" placeholder="Full Name" required>
+            <input type="email" th:field="*{email}" placeholder="Email Address" required>
+            <input type="password" th:field="*{password}" placeholder="Create Password" required>
+
+            <button type="submit">Signup</button>
+
+        </form>
+
+        <!-- ERROR -->
+        <p class="error" th:text="${error}"></p>
+
+        <!-- SUCCESS -->
+        <p class="success" th:text="${success}"></p>
+
+        <p style="margin-top:15px; font-size:14px;">
+            Already have an account?
+            <a href="/login">Login Here</a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Contact Management</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+body { margin:0; font-family:'Inter',sans-serif; background:#F4F6F9; }
+.container { padding:30px; }
+
+h2 { margin-bottom:20px; }
+
+/* SEARCH */
+.search {
+    margin-bottom:20px;
+    padding:10px;
+    width:300px;
+    border:1px solid #ddd;
+    border-radius:6px;
+}
+
+/* TABLE */
+table {
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+th, td {
+    padding:12px;
+    text-align:left;
+}
+
+th {
+    background:#2E4F4F;
+    color:white;
+}
+
+tr:nth-child(even) {
+    background:#f9f9f9;
+}
+
+/* BUTTONS */
+.btn {
+    padding:6px 12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    text-decoration:none;
+}
+
+.btn-reply { background:#3498db; color:white; }
+.btn-danger { background:#e74c3c; color:white; }
+.btn-send { background:#27ae60; color:white; }
+
+/* MESSAGE BOX */
+.message-box {
+    max-width:250px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    cursor:pointer;
+}
+
+.full-message {
+    display:none;
+    margin-top:10px;
+    background:#f1f1f1;
+    padding:10px;
+    border-radius:6px;
+}
+
+/* REPLY FORM */
+.reply-form {
+    display:none;
+    margin-top:10px;
+}
+
+textarea {
+    width:100%;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+	<div th:replace="~{admin/fragments :: navbar}"></div>
+
+<div class="container">
+
+<h2>Contact / Inquiry Management</h2>
+
+<!-- 🔍 SEARCH -->
+<input type="text" class="search" placeholder="Search messages..." onkeyup="searchMsg()">
+
+<table id="msgTable">
+
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Message</th>
+<th>Action</th>
+</tr>
+
+<tr th:each="c : ${contacts}">
+
+<td th:text="${c.name}"></td>
+<td th:text="${c.email}"></td>
+
+<td>
+<div class="message-box" onclick="toggleMessage(this)">
+    <span th:text="${c.message}"></span>
+</div>
+
+<div class="full-message" th:text="${c.message}"></div>
+</td>
+
+<td>
+
+<button class="btn btn-reply" onclick="toggleReply(this)">Reply</button>
+
+<a th:href="@{'/admin/messages/delete/' + ${c.id}}" 
+   class="btn btn-danger">Delete</a>
+
+<!-- 📧 REPLY FORM -->
+<div class="reply-form">
+	<form th:action="@{/admin/messages/reply}" method="post">
+<input type="hidden" name="email" th:value="${c.email}">
+
+<textarea name="reply" placeholder="Write reply..." required></textarea>
+
+<button class="btn btn-send">Send</button>
+
+</form>
+</div>
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<script>
+function searchMsg(){
+    let input = document.querySelector(".search").value.toLowerCase();
+    document.querySelectorAll("#msgTable tr").forEach((row,index)=>{
+        if(index===0) return;
+        row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+    });
+}
+
+function toggleMessage(el){
+    let full = el.nextElementSibling;
+    full.style.display = full.style.display === "block" ? "none" : "block";
+}
+
+function toggleReply(btn){
+    let form = btn.parentElement.querySelector(".reply-form");
+    form.style.display = form.style.display === "block" ? "none" : "block";
+}
+</script>
+
+</body>
+</html>

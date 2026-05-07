@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Our Services - Aurelia Grand</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" href="/css/fragments.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+	<style>
+
+	/* ===== GLOBAL ===== */
+	body {
+	    margin: 0;
+	    font-family: 'Inter', sans-serif;
+	    background: #F8F6F2;
+	    color: #1E1E1E;
+	}
+
+	h1, h2, h3 {
+	    font-family: 'Playfair Display', serif;
+	}
+
+	/* ===== HERO ===== */
+	/* HERO */
+	.hero {
+	    min-height: 55vh;
+	    background: url('/images/hero/banner1.png') center/cover no-repeat;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    position: relative;
+	}
+
+	/* STRONGER, SMART OVERLAY */
+	.hero::after {
+	    content: "";
+	    position: absolute;
+	    inset: 0;
+	    background: linear-gradient(
+	        rgba(0,0,0,0.65),
+	        rgba(0,0,0,0.5)
+	    );
+	    z-index: 1;
+	}
+
+	/* TEXT */
+	.hero h1 {
+	    position: relative;
+	    z-index: 2;
+
+	    /* Slightly soft white instead of pure white */
+	    color: #f1ede7;
+
+	    font-size: clamp(36px, 6vw, 56px);
+	    font-weight: 600;
+	    letter-spacing: 1px;
+	    text-align: center;
+
+	    /* Softer shadow (less harsh) */
+	    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+	}
+
+	/* ===== CONTAINER ===== */
+	.container {
+	    padding: 80px;
+	}
+
+	/* ===== SECTION TITLE ===== */
+	.section-title {
+	    text-align: center;
+	    font-size: 34px;
+	    margin-bottom: 40px;
+	}
+
+	/* ===== SERVICES ===== */
+	.services {
+	    display: grid;
+	    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	    gap: 30px;
+	}
+
+	.service-card {
+	    background: white;
+	    border-radius: 16px;
+	    overflow: hidden;
+	    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+	    transition: 0.4s;
+	}
+
+	.service-card:hover {
+	    transform: translateY(-8px);
+	}
+
+	.service-card img {
+	    width: 100%;
+	    height: 200px;
+	    object-fit: cover;
+	}
+
+	.service-content {
+	    padding: 20px;
+	}
+
+	.price {
+	    color: #2F5D50;
+	    font-weight: bold;
+	    margin-top: 10px;
+	}
+
+	/* ===== STAFF ===== */
+	.staff {
+	    display: flex;
+	    justify-content: center;
+	    gap: 30px;
+	    flex-wrap: wrap;
+	    margin-top: 50px;
+	}
+
+	.staff-card {
+	    text-align: center;
+	    width: 220px;
+	}
+
+	.staff-card img {
+	    width: 100%;
+	    height: 260px;
+	    object-fit: cover;
+	    border-radius: 16px;
+	}
+
+	.staff-card h4 {
+	    margin: 10px 0 5px;
+	}
+
+	.staff-card p {
+	    font-size: 14px;
+	    color: #777;
+	}
+
+	/* ===== REVIEWS ===== */
+	.reviews {
+	    display: flex;
+	    gap: 25px;
+	    justify-content: center;
+	    flex-wrap: wrap;
+	    margin-top: 40px;
+	}
+
+	.review-card {
+	    background: white;
+	    padding: 25px;
+	    width: 300px;
+	    border-radius: 14px;
+	    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+	}
+
+	.review-card p {
+	    font-style: italic;
+	}
+
+	.review-card h4 {
+	    margin-top: 10px;
+	}
+
+	/* ===== CTA ===== */
+	.cta {
+	    margin-top: 80px;
+	    background: #2F5D50;
+	    color: white;
+	    text-align: center;
+	    padding: 60px;
+	    border-radius: 16px;
+	}
+
+	.cta a {
+	    display: inline-block;
+	    margin-top: 15px;
+	    background: #D6C3A3;
+	    padding: 12px 25px;
+	    border-radius: 8px;
+	    color: #1E1E1E;
+	    text-decoration: none;
+	}
+
+	</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div th:replace="~{user/fragments :: navbar}"></div>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Our Services</h1>
+</section>
+
+<!-- SERVICES -->
+<div class="container">
+
+	<h2 class="section-title">Our Premium Services</h2>
+
+    <div class="services">
+
+        <div class="service-card" th:each="s : ${services}">
+			<img th:src="@{'/uploads/services/' + ${s.image}}"
+			     onerror="this.src='/images/services/default.jpg'">
+			     
+
+            <div class="service-content">
+                <h3 th:text="${s.name}"></h3>
+
+                <p>
+                    Enjoy our exclusive service designed to elevate your comfort,
+                    luxury, and overall experience at Aurelia Grand Hotel.
+                </p>
+
+                <p class="price">
+                    ₹<span th:text="${s.price}"></span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+	
+	<h2 class="section-title">Meet Our Professionals</h2>
+
+	<div class="staff">
+
+	    <div class="staff-card">
+	        <img src="/images/staff/chef.jpg">
+	        <h4>Chef Arjun</h4>
+	        <p>Head Chef</p>
+	    </div>
+
+	    <div class="staff-card">
+	        <img src="/images/staff/manager.jpg">
+	        <h4>Riya Shah</h4>
+	        <p>Hotel Manager</p>
+	    </div>
+
+	    <div class="staff-card">
+	        <img src="/images/staff/spa.jpg">
+	        <h4>Neha Kapoor</h4>
+	        <p>Spa Specialist</p>
+	    </div>
+
+	</div>
+
+    <!-- REVIEWS -->
+	<h2 class="section-title">Guest Experiences</h2>
+    <div class="reviews">
+
+        <div class="review-card">
+            <p>"The spa service was absolutely relaxing and professional."</p>
+            <h4>- Neha Kapoor</h4>
+        </div>
+
+        <div class="review-card">
+            <p>"Room service was fast and food quality was top class."</p>
+            <h4>- Raj Mehta</h4>
+        </div>
+
+        <div class="review-card">
+            <p>"Loved the hospitality and premium service quality."</p>
+            <h4>- Sneha Iyer</h4>
+        </div>
+
+    </div>
+
+</div>
+<div class="cta">
+    <h2>Experience Luxury Like Never Before</h2>
+    <p>Book your stay and enjoy world-class hospitality</p>
+    <a href="/user/rooms">Explore Rooms</a>
+</div>
+
+<!-- FOOTER -->
+<div th:replace="~{user/fragments :: footer}"></div>
+
+</body>
+</html>

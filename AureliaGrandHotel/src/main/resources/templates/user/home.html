@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Aurelia Grand Hotel</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/fragments.css">
+
+<style>
+
+/* ===== GLOBAL ===== */
+*{
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #F8F6F2;
+    color: #1E1E1E;
+}
+
+/* ===== HERO ===== */
+.hero {
+    height: 95vh;
+    background: url('/images/hero/banner1.png') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Softer luxury overlay */
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        rgba(0,0,0,0.55),
+        rgba(0,0,0,0.45)
+    );
+    z-index: 1;
+}
+
+/* Content */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    max-width: 750px;
+    padding: 20px;
+}
+
+/* LUXURY TITLE */
+.hero-content h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 6vw, 64px);
+    font-weight: 500;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    margin-bottom: 18px;
+
+    /* subtle depth instead of heavy shadow */
+    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* SUBTEXT */
+.hero-content p {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    color: #EAE6DF;
+    margin-bottom: 30px;
+
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+/* BUTTON (important for luxury feel) */
+.hero-content .btn {
+    background: #3e7c6b;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.hero-content .btn:hover {
+    background: #2f6154;
+    transform: translateY(-2px);
+}
+/* ===== BUTTON ===== */
+.btn-primary {
+    display: inline-block;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #2F5D50, #3E7C6D);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 10px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #3E7C6D, #2F5D50);
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    padding: 80px 60px;
+	text-align: center;
+}
+
+/* ===== ABOUT ===== */
+.about {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.about img {
+    width: 48%;
+    height: 380px;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+.about-text {
+    width: 48%;
+}
+
+.about-text h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.about-text p {
+    color: #555;
+    line-height: 1.8;
+}
+
+/* ===== FEATURES ===== */
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.feature-box {
+    background: white;
+    padding: 25px;
+    width: 300px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    transition: 0.3s;
+}
+
+.feature-box:hover {
+    transform: translateY(-10px);
+}
+
+.feature-box img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* ===== FACILITIES ===== */
+.facilities {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+.facility {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid #E5E0DA;
+    transition: 0.3s;
+}
+
+.facility:hover {
+    background: #2F5D50;
+    color: white;
+}
+
+/* ===== REVIEWS ===== */
+.reviews {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.review-card {
+    background: white;
+    padding: 25px;
+    width: 300px;
+    border-radius: 15px;
+}
+
+/* ===== CTA ===== */
+.cta {
+    background: #2F5D50;
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+/* ===== RESPONSIVE FIX ===== */
+@media (max-width: 900px) {
+
+    .hero-content h1 {
+        font-size: 40px;
+    }
+
+    .about {
+        flex-direction: column;
+    }
+
+    .about img,
+    .about-text {
+        width: 100%;
+    }
+
+    .container {
+        padding: 60px 20px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div th:replace="~{user/fragments :: navbar}"></div>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Luxury Stay Experience</h1>
+        <p>Where comfort meets elegance and unforgettable moments begin</p>
+        <a th:href="@{/user/rooms}" class="btn-primary">Book Your Stay</a>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<div class="container about">
+    <img src="/images/hero/hotel.webp">
+
+    <div class="about-text">
+        <h2>Experience Luxury Like Never Before</h2>
+        <p>
+            Welcome to Aurelia Grand Hotel — where elegance meets comfort.
+            Enjoy premium rooms, world-class dining, and unforgettable experiences.
+        </p>
+
+        <a th:href="@{/user/rooms}" class="btn-primary">Explore Rooms</a>
+    </div>
+</div>
+
+<!-- WHY CHOOSE US -->
+<div class="container">
+    <h2 class="section-title">Why Choose Us</h2>
+
+    <div class="features">
+        <div class="feature-box">
+            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32">
+            <h3>Premium Rooms</h3>
+            <p>Elegant and spacious rooms designed for comfort</p>
+        </div>
+
+        <div class="feature-box">
+            <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa">
+            <h3>Best Pricing</h3>
+            <p>Luxury experience at affordable prices</p>
+        </div>
+
+        <div class="feature-box">
+            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b">
+            <h3>24/7 Service</h3>
+            <p>We are always available for your needs</p>
+        </div>
+    </div>
+</div>
+
+<!-- FACILITIES -->
+<div class="container">
+    <h2 class="section-title">Premium Facilities</h2>
+
+    <div class="facilities">
+        <div class="facility">🌐 Free WiFi</div>
+        <div class="facility">🏊 Swimming Pool</div>
+        <div class="facility">💆 Spa & Wellness</div>
+        <div class="facility">🚗 Parking</div>
+    </div>
+</div>
+
+<!-- REVIEWS -->
+<div class="container">
+    <h2 class="section-title">Guest Reviews</h2>
+
+    <div class="reviews">
+        <div class="review-card">
+            <p>"Amazing experience! Truly luxury."</p>
+            <h4>- Rahul Sharma</h4>
+        </div>
+
+        <div class="review-card">
+            <p>"Best hotel service I’ve ever seen."</p>
+            <h4>- Priya Patel</h4>
+        </div>
+
+        <div class="review-card">
+            <p>"Highly recommended for family stay."</p>
+            <h4>- Amit Verma</h4>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<section class="cta">
+    <h2>Book Your Dream Stay Today</h2>
+    <a th:href="@{/user/rooms}" class="btn-primary">Explore Rooms</a>
+</section>
+
+<!-- FOOTER -->
+<div th:replace="~{user/fragments :: footer}"></div>
+
+</body>
+</html>

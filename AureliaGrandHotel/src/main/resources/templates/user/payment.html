@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Secure Payment - Aurelia Grand</title>
+
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="/css/fragments.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+:root {
+    --primary:#2E4F4F;
+    --bg:#F9FAFB;
+}
+
+body {
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+}
+
+.hero {
+    min-height:50vh;
+    background:url('/images/hero/banner1.png') center/cover;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+.hero::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+}
+.hero h1 {
+    position:relative;
+    color:#fff;
+    font-size:48px;
+}
+
+/* LAYOUT */
+.container {
+    max-width:1100px;
+    margin:auto;
+    padding:50px 20px;
+}
+.payment-layout {
+    display:grid;
+    grid-template-columns:1.3fr 0.7fr;
+    gap:30px;
+}
+
+/* CARD */
+.card-box,.summary {
+    background:#fff;
+    padding:25px;
+    border-radius:14px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.05);
+}
+
+/* METHODS */
+.methods {
+    display:flex;
+    gap:10px;
+    margin:20px 0;
+}
+.method {
+    flex:1;
+    padding:12px;
+    text-align:center;
+    border:1px solid #ddd;
+    border-radius:10px;
+    cursor:pointer;
+}
+.method.active {
+    border:2px solid var(--primary);
+    background:#eef6f6;
+}
+
+/* FORM SWITCH */
+.form-section {
+    display:none;
+}
+.form-section.active {
+    display:block;
+}
+
+/* INPUT */
+input {
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:8px;
+    border:1px solid #ddd;
+}
+
+/* BUTTON */
+.btn {
+    width:100%;
+    padding:14px;
+    background:var(--primary);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+.btn:disabled {
+    background:#999;
+}
+
+/* BADGE */
+.badge {
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+.paid { background:#d4edda; color:#2e7d32; }
+.unpaid { background:#fff3cd; color:#856404; }
+
+</style>
+</head>
+
+<body>
+
+<div th:replace="~{user/fragments :: navbar}"></div>
+
+<section class="hero">
+    <h1>Secure Payment</h1>
+</section>
+
+<div class="container">
+<div class="payment-layout">
+
+<!-- LEFT -->
+<div class="card-box">
+
+<h2>Select Payment</h2>
+
+<div class="methods">
+	<div class="method active" onclick="selectMethod(this,'cardForm')">💳 Card</div>
+	<div class="method" onclick="selectMethod(this,'upiForm')">📲 UPI</div>
+	<div class="method" onclick="selectMethod(this,'gpayForm')">🟢 GPay</div>
+	<div class="method" onclick="selectMethod(this,'paytmForm')">🔵 Paytm</div>
+</div>
+
+<form id="paymentForm" th:action="@{/user/pay}" method="post">
+
+<input type="hidden" name="bookingId" th:value="${booking.id}">
+
+<!-- CARD -->
+<div id="cardForm" class="form-section active">
+    <input type="text" placeholder="Card Holder Name" required>
+    <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
+    <div style="display:flex; gap:10px;">
+        <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
+        <input type="text" id="cvv" placeholder="CVV" maxlength="3" required>
+    </div>
+</div>
+
+<!-- UPI -->
+<div id="upiForm" class="form-section">
+    <input type="text" placeholder="Enter UPI ID (example@upi)">
+</div>
+
+<!-- GPAY -->
+<div id="gpayForm" class="form-section">
+    <input type="text" placeholder="Enter GPay Number">
+</div>
+
+<!-- PAYTM -->
+<div id="paytmForm" class="form-section">
+    <input type="text" placeholder="Enter Paytm Number">
+</div>
+
+<button type="submit" id="payBtn" class="btn">Pay Now</button>
+
+</form>
+</div>
+
+<!-- RIGHT -->
+<div class="summary">
+
+<h2>Booking Summary</h2>
+
+<p><strong>Room:</strong> <span th:text="${booking.room.type}"></span></p>
+
+<p><strong>Check-In:</strong>
+<span th:text="${#temporals.format(booking.checkIn,'dd MMM yyyy')}"></span>
+</p>
+
+<p><strong>Check-Out:</strong>
+<span th:text="${#temporals.format(booking.checkOut,'dd MMM yyyy')}"></span>
+</p>
+
+<p>
+<strong>Status:</strong>
+<span th:text="${booking.paymentStatus}"
+      th:classappend="' badge ' + (${booking.paymentStatus} == 'PAID' ? 'paid' : 'unpaid')">
+</span>
+</p>
+
+<p style="font-size:22px;color:#2E4F4F;">
+₹ <span th:text="${booking.totalPrice}"></span>
+</p>
+
+</div>
+
+</div>
+</div>
+
+<div th:replace="~{user/fragments :: footer}"></div>
+
+<script>
+
+	function selectMethod(el, formId){
+
+	    // ACTIVE BUTTON
+	    document.querySelectorAll('.method').forEach(m => m.classList.remove('active'));
+	    el.classList.add('active');
+
+	    // HIDE ALL FORMS
+	    document.querySelectorAll('.form-section').forEach(f => {
+	        f.classList.remove('active');
+
+	        // ❌ REMOVE required from hidden inputs
+	        f.querySelectorAll("input").forEach(input => {
+	            input.removeAttribute("required");
+	        });
+	    });
+
+	    // SHOW SELECTED FORM
+	    const activeForm = document.getElementById(formId);
+	    activeForm.classList.add('active');
+
+	    // ✅ ADD required only to visible inputs
+	    activeForm.querySelectorAll("input").forEach(input => {
+	        input.setAttribute("required", "true");
+	    });
+	}
+</script>
+
+</body>
+</html>

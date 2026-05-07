@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Manage Users</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+body { margin:0; font-family:'Inter',sans-serif; background:#F4F6F9; }
+.container { padding:30px; }
+
+h2 { margin-bottom:20px; }
+
+/* FORM */
+.form-box {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    display:grid;
+    gap:10px;
+}
+
+input, select {
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ddd;
+}
+
+/* BUTTONS */
+.btn { padding:6px 12px; border:none; border-radius:6px; cursor:pointer; }
+.btn-primary { background:#2E4F4F; color:white; }
+.btn-danger { background:#e74c3c; color:white; }
+.btn-edit { background:#3498db; color:white; }
+.btn-save { background:#27ae60; color:white; }
+
+/* SEARCH */
+.search {
+    width:300px;
+    margin-bottom:20px;
+}
+
+/* GRID */
+.user-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
+
+.user-card {
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.05);
+}
+
+.role {
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.admin { background:#d1ecf1; color:#0c5460; }
+.user { background:#e2e3e5; color:#383d41; }
+
+.edit-form { display:none; margin-top:10px; }
+</style>
+</head>
+
+<body>
+
+<div th:replace="admin/fragments :: navbar"></div>
+
+<div class="container">
+
+<h2>Manage Users</h2>
+
+<!-- ➕ ADD USER -->
+<div class="form-box">
+<form action="/admin/users/add" method="post">
+
+<input type="text" name="name" placeholder="Name" required>
+<input type="email" name="email" placeholder="Email" required>
+
+<select name="role">
+<option value="USER">USER</option>
+<option value="ADMIN">ADMIN</option>
+</select>
+
+<button class="btn btn-primary">Add User</button>
+</form>
+</div>
+
+<!-- 🔍 SEARCH -->
+<input type="text" class="search" placeholder="Search users..." onkeyup="searchUser()">
+
+<!-- 👤 USER CARDS -->
+<div class="user-grid">
+
+<div class="user-card" th:each="u : ${users}">
+
+<!-- VIEW MODE -->
+<div class="view-mode">
+
+<h3 th:text="${u.name}"></h3>
+<p th:text="${u.email}"></p>
+
+<p>
+<span th:text="${u.role}" 
+      th:classappend="${u.role == 'ADMIN'} ? 'role admin' : 'role user'">
+</span>
+</p>
+
+<button class="btn btn-edit" onclick="toggleEdit(this)">Edit</button>
+
+<a th:href="@{'/admin/users/delete/' + ${u.id}}" 
+   class="btn btn-danger">Delete</a>
+
+</div>
+
+<!-- ✏️ EDIT MODE -->
+<div class="edit-form">
+
+<form action="/admin/users/update" method="post">
+
+<input type="hidden" name="id" th:value="${u.id}">
+
+<input type="text" name="name" th:value="${u.name}">
+<input type="email" name="email" th:value="${u.email}">
+
+<select name="role">
+<option th:selected="${u.role == 'USER'}">USER</option>
+<option th:selected="${u.role == 'ADMIN'}">ADMIN</option>
+</select>
+
+<button class="btn btn-save">Save</button>
+<button type="button" class="btn" onclick="toggleEdit(this)">Cancel</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div th:replace="admin/fragments :: footer"></div>
+
+<script>
+function searchUser(){
+    let input = document.querySelector(".search").value.toLowerCase();
+    document.querySelectorAll(".user-card").forEach(card=>{
+        card.style.display = card.innerText.toLowerCase().includes(input) ? "" : "none";
+    });
+}
+
+function toggleEdit(btn){
+    let card = btn.closest(".user-card");
+    let view = card.querySelector(".view-mode");
+    let edit = card.querySelector(".edit-form");
+
+    if(edit.style.display === "block"){
+        edit.style.display = "none";
+        view.style.display = "block";
+    } else {
+        edit.style.display = "block";
+        view.style.display = "none";
+    }
+}
+</script>
+
+</body>
+</html>

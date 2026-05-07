@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Manage Foods</title>
+
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+body { margin:0; font-family:'Inter',sans-serif; background:#F4F6F9; }
+.container { padding:30px; }
+
+.form-box {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    display:grid;
+    gap:10px;
+}
+
+input, select {
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ddd;
+}
+
+.btn { padding:6px 12px; border:none; border-radius:6px; cursor:pointer; }
+.btn-primary { background:#2E4F4F; color:white; }
+.btn-danger { background:#e74c3c; color:white; }
+.btn-edit { background:#3498db; color:white; }
+.btn-save { background:#27ae60; color:white; }
+
+.search { width:300px; margin-bottom:20px; }
+
+.food-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
+
+.food-card {
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 4px 20px rgba(0,0,0,0.05);
+}
+
+.food-card img {
+    width:100%;
+    height:160px;
+    object-fit:cover;
+}
+
+.food-content { padding:15px; }
+
+.status {
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.available { background:#d4edda; color:#2e7d32; }
+.unavailable { background:#f8d7da; color:#c0392b; }
+
+.edit-form { display:none; margin-top:10px; }
+</style>
+</head>
+
+<body>
+
+<div th:replace="admin/fragments :: navbar"></div>
+
+<div class="container">
+
+<h2>Manage Foods</h2>
+
+<!-- ➕ ADD FOOD -->
+<div class="form-box">
+<form action="/admin/foods/add" method="post" enctype="multipart/form-data">
+
+<input type="text" name="name" placeholder="Food Name" required>
+<input type="number" name="price" placeholder="Price" required>
+
+<select name="status">
+<option value="AVAILABLE">Available</option>
+<option value="NOT_AVAILABLE">Not Available</option>
+</select>
+
+<input type="file" name="imageFile" required>
+
+<button class="btn btn-primary">Add Food</button>
+</form>
+</div>
+
+<!-- 🔍 SEARCH -->
+<input type="text" class="search" placeholder="Search foods..." onkeyup="searchFoods()">
+
+<!-- 🍽 FOODS -->
+<div class="food-grid" id="foodList">
+
+<div class="food-card" th:each="f : ${foods}">
+
+<img th:src="@{'/uploads/food/' + ${f.image}}">
+
+<div class="food-content">
+
+<!-- VIEW MODE -->
+<div class="view-mode">
+
+<h3 th:text="${f.name}"></h3>
+<p>₹<span th:text="${f.price}"></span></p>
+
+<p>
+<span th:text="${f.status}" 
+      th:classappend="${f.status == 'AVAILABLE'} ? 'status available' : 'status unavailable'">
+</span>
+</p>
+
+<button class="btn btn-edit" onclick="toggleEdit(this)">Edit</button>
+
+<a th:href="@{'/admin/foods/delete/' + ${f.id}}" 
+   class="btn btn-danger">Delete</a>
+
+</div>
+
+<!-- ✏️ EDIT MODE -->
+<div class="edit-form">
+
+<form action="/admin/foods/update" method="post" enctype="multipart/form-data">
+
+<input type="hidden" name="id" th:value="${f.id}">
+
+<input type="text" name="name" th:value="${f.name}">
+<input type="number" name="price" th:value="${f.price}">
+
+<select name="status">
+    <option value="AVAILABLE" th:selected="${f.status == 'AVAILABLE'}">AVAILABLE</option>
+    <option value="NOT_AVAILABLE" th:selected="${f.status == 'NOT_AVAILABLE'}">NOT_AVAILABLE</option>
+</select>
+
+<input type="file" name="imageFile">
+
+<button class="btn btn-save">Save</button>
+<button type="button" class="btn" onclick="toggleEdit(this)">Cancel</button>
+
+</form>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div th:replace="admin/fragments :: footer"></div>
+
+<script>
+function searchFoods(){
+    let input = document.querySelector(".search").value.toLowerCase();
+    document.querySelectorAll(".food-card").forEach(card=>{
+        card.style.display = card.innerText.toLowerCase().includes(input) ? "" : "none";
+    });
+}
+
+function toggleEdit(btn){
+    let card = btn.closest(".food-content");
+    let view = card.querySelector(".view-mode");
+    let edit = card.querySelector(".edit-form");
+
+    if(edit.style.display === "block"){
+        edit.style.display = "none";
+        view.style.display = "block";
+    } else {
+        edit.style.display = "block";
+        view.style.display = "none";
+    }
+}
+</script>
+
+</body>
+</html>

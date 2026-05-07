@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Contact Us</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" href="/css/fragments.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+	<style>
+
+	/* ===== ROOT ===== */
+	:root {
+	    --primary: #2F5D50;
+	    --primary-light: #3E7C6D;
+	    --accent: #C7A17A;
+	    --bg: #F8F6F2;
+	    --white: #FFFFFF;
+	    --text: #1E1E1E;
+	    --subtext: #6B6B6B;
+	    --border: #E5E0DA;
+	}
+
+	/* ===== GLOBAL ===== */
+	body {
+	    margin: 0;
+	    font-family: 'Inter', sans-serif;
+	    background: var(--bg);
+	    color: var(--text);
+	}
+
+	h1, h2 {
+	    font-family: 'Playfair Display', serif;
+	}
+
+	/* ===== HERO ===== */
+	/* HERO */
+	.hero {
+	    min-height: 55vh;
+	    background: url('/images/hero/banner1.png') center/cover no-repeat;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    position: relative;
+	}
+
+	/* STRONGER, SMART OVERLAY */
+	.hero::after {
+	    content: "";
+	    position: absolute;
+	    inset: 0;
+	    background: linear-gradient(
+	        rgba(0,0,0,0.65),
+	        rgba(0,0,0,0.5)
+	    );
+	    z-index: 1;
+	}
+
+	/* TEXT */
+	.hero h1 {
+	    position: relative;
+	    z-index: 2;
+
+	    /* Slightly soft white instead of pure white */
+	    color: #f1ede7;
+
+	    font-size: clamp(36px, 6vw, 56px);
+	    font-weight: 600;
+	    letter-spacing: 1px;
+	    text-align: center;
+
+	    /* Softer shadow (less harsh) */
+	    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+	}
+	/* ===== CONTAINER ===== */
+	.container {
+	    max-width: 1100px;
+	    margin: auto;
+	    padding: 60px 20px;
+	}
+
+	/* ===== CONTACT LAYOUT ===== */
+	.contact-layout {
+	    display: grid;
+	    grid-template-columns: 1fr 1fr;
+	    gap: 40px;
+	}
+
+	/* ===== CONTACT INFO ===== */
+	.contact-info {
+	    background: var(--white);
+	    padding: 30px;
+	    border-radius: 18px;
+	    border: 1px solid var(--border);
+	    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+	}
+
+	.contact-info h2 {
+	    margin-bottom: 20px;
+	}
+
+	.contact-info p {
+	    margin: 10px 0;
+	    color: var(--subtext);
+	}
+
+	/* ===== FORM BOX ===== */
+	.form-box {
+	    background: var(--white);
+	    padding: 30px;
+	    border-radius: 18px;
+	    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+	    border: 1px solid var(--border);
+	    transition: 0.3s;
+	}
+
+	.form-box:hover {
+	    transform: translateY(-5px);
+	}
+
+	/* ===== INPUT ===== */
+	input, textarea {
+	    width: 100%;
+	    padding: 12px;
+	    margin: 10px 0;
+	    border-radius: 8px;
+	    border: 1px solid var(--border);
+	    outline: none;
+	    transition: 0.3s;
+	    font-size: 14px;
+	}
+
+	input:focus, textarea:focus {
+	    border-color: var(--primary);
+	    box-shadow: 0 0 0 2px rgba(47,93,80,0.1);
+	}
+
+	/* ===== BUTTON ===== */
+	.btn {
+	    width: 100%;
+	    padding: 14px;
+	    background: var(--primary);
+	    color: white;
+	    border-radius: 10px;
+	    border: none;
+	    cursor: pointer;
+	    font-size: 15px;
+	    transition: 0.3s;
+	}
+
+	.btn:hover {
+	    background: var(--primary-light);
+	}
+
+	/* ===== RESPONSIVE ===== */
+	@media(max-width: 900px) {
+	    .contact-layout {
+	        grid-template-columns: 1fr;
+	    }
+	}
+
+	</style>
+</head>
+
+<body>
+
+<div th:replace="~{user/fragments :: navbar}"></div>
+
+<section class="hero"><h1>Contact Us</h1></section>
+
+<div class="container">
+    <div class="form-box">
+        <h2>Get in Touch</h2>
+
+        <form th:action="@{/user/contact}" method="post">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" rows="5" placeholder="Your Message"></textarea>
+
+            <button class="btn">Send Message</button>
+        </form>
+    </div>
+</div>
+
+<div class="contact-layout">
+
+    <!-- LEFT INFO -->
+    <div class="contact-info">
+        <h2>Contact Information</h2>
+        <p>📍 Aurelia Grand Hotel, India</p>
+        <p>📞 +91 9876543210</p>
+        <p>✉ info@aurelia.com</p>
+    </div>
+
+    <!-- RIGHT FORM -->
+    <div class="form-box">
+        <!-- your existing form -->
+    </div>
+
+</div>
+
+<div th:replace="~{user/fragments :: footer}"></div>
+
+</body>
+</html>

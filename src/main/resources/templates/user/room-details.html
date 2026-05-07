@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Room Details - Aurelia Grand</title>
+
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="/css/fragments.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== GLOBAL ===== */
+/* ===== GLOBAL ===== */
+body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:#F8F6F2;
+}
+h1,h2,h3{
+    font-family:'Playfair Display',serif;
+}
+
+/* ===== NAVBAR FIX ===== */
+.navbar{
+    background:#fff;
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.logo{
+    font-size:22px;
+    font-weight:600;
+    color:#2F5D50;
+}
+.nav-links a{
+    margin:0 15px;
+    text-decoration:none;
+    color:black;
+    font-weight:500;
+}
+.nav-links a:hover{
+    color:#2F5D50;
+}
+
+/* ===== HERO (SAME AS ROOMS PAGE) ===== */
+.hero{
+    height:60vh;
+    background:url('/images/hero/banner1.png') center/cover no-repeat;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+.hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+}
+.hero h1{
+    position:relative;
+    color:#fff;
+    font-size:60px;
+    letter-spacing:2px;
+}
+
+/* ===== CONTAINER ===== */
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+/* ===== TOP GRID ===== */
+.top-layout{
+    display:grid;
+    grid-template-columns:1.6fr 1fr;
+    gap:40px;
+}
+
+/* ===== GALLERY ===== */
+.gallery{
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:15px;
+}
+
+.thumbs{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.main-image img{
+    width:100%;
+    height:420px;
+
+    object-fit:cover;
+    object-position:center;
+
+    border-radius:16px;
+
+    /* 🔥 BLUR FIX */
+    image-rendering: crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+.thumbs img{
+    width:100%;
+    height:80px;
+    object-fit:cover;
+
+    border-radius:10px;
+
+    image-rendering: crisp-edges;
+}
+.thumbs img:hover{
+    opacity:1;
+    transform:scale(1.05);
+}
+
+.main-image img{
+    max-width:100%;
+    height:auto;
+}
+
+/* ===== ROOM INFO ===== */
+.room-header{
+    margin-top:20px;
+}
+.price{
+    font-size:22px;
+    color:#2F5D50;
+    font-weight:bold;
+}
+.meta{
+    display:flex;
+    gap:20px;
+    margin-top:10px;
+    color:#555;
+}
+
+/* ===== BOOKING CARD ===== */
+.booking-card{
+    background:#fff;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.booking-card input,
+.booking-card select{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:8px;
+    border:1px solid #ddd;
+}
+
+.btn{
+    width:100%;
+    padding:14px;
+    background:#2F5D50;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+.btn:hover{
+    background:#3E7C6D;
+}
+
+/* ===== DETAILS ===== */
+.section{
+    margin-top:40px;
+}
+
+.section p{
+    color:#666;
+    line-height:1.6;
+}
+
+/* ===== AMENITIES ===== */
+.amenities{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    margin-top:15px;
+}
+.amenity{
+    background:#fff;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* ===== RULES ===== */
+.rules{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+.rule-box{
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+    .top-layout{
+        grid-template-columns:1fr;
+    }
+    .gallery{
+        grid-template-columns:1fr;
+    }
+    .thumbs{
+        flex-direction:row;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div th:replace="~{user/fragments :: navbar}"></div>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Room Details</h1>
+</section>
+
+
+<div class="container">
+
+    <div class="top-layout">
+
+        <!-- LEFT SIDE -->
+        <div>
+
+            <!-- GALLERY -->
+            <div class="gallery">
+
+                <div class="thumbs">
+                    <img th:src="@{'/uploads/rooms/' + ${room.image}}" onclick="changeImage(this)">
+                    <img th:src="@{/images/rooms/living-room.jpg}" onclick="changeImage(this)">
+                    <img th:src="@{/images/rooms/bathroom.jpg}" onclick="changeImage(this)">
+                    <img th:src="@{/images/rooms/balcony.jpg}" onclick="changeImage(this)">
+                </div>
+
+                <div class="main-image">
+                    <img th:src="@{'/uploads/rooms/' + ${room.image}}" id="mainImage">
+                </div>
+
+            </div>
+
+            <!-- ROOM HEADER (FIXED POSITION) -->
+            <div class="room-header">
+                <h2 th:text="${room.type}"></h2>
+                <div class="price">₹<span th:text="${room.price}"></span> / night</div>
+
+                <div class="meta">
+                    <span>1 Bed</span>
+                    <span>1 Bath</span>
+                    <span>2 Guests</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="booking-card">
+
+            <h3>Book Room</h3>
+
+            <form th:action="@{/user/book}" method="post">
+
+                <input type="hidden" name="roomId" th:value="${room.id}">
+
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="tel" name="phone" placeholder="Phone Number" required>
+
+                <input type="date" id="checkIn" name="checkIn" required>
+                <input type="date" id="checkOut" name="checkOut" required>
+
+                <select name="guests">
+                    <option>1 Guest</option>
+                    <option>2 Guests</option>
+                    <option>3 Guests</option>
+                </select>
+
+				<a th:href="@{'/user/book/' + ${room.id}}" class="btn">
+				    Book Now
+				</a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===== OVERVIEW ===== -->
+<div class="section">
+    <h2>Overview</h2>
+    <p>
+        Experience luxury and comfort in our elegantly designed rooms.
+        Enjoy premium bedding, high-speed WiFi, and modern interiors crafted for relaxation.
+    </p>
+</div>
+
+<!-- ===== AMENITIES ===== -->
+<div class="section">
+    <h2>Room Amenities</h2>
+
+    <div class="amenities">
+        <div class="amenity">Air Conditioning</div>
+        <div class="amenity">Flat Screen TV</div>
+        <div class="amenity">High Speed WiFi</div>
+        <div class="amenity">Sound System</div>
+        <div class="amenity">Bathtub</div>
+        <div class="amenity">Seating Area</div>
+    </div>
+</div>
+
+<!-- ===== RULES ===== -->
+<div class="section">
+    <h2>Booking Rules</h2>
+
+    <div class="rules">
+        <div class="rule-box">
+            <h4>Check In</h4>
+            <p>After 12:00 PM</p>
+        </div>
+
+        <div class="rule-box">
+            <h4>Check Out</h4>
+            <p>Before 11:00 AM</p>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<div th:replace="~{user/fragments :: footer}"></div>
+
+<script>
+function changeImage(img){
+    document.getElementById("mainImage").src = img.src;
+}
+
+/* DATE VALIDATION */
+let today = new Date().toISOString().split('T')[0];
+checkIn.min = today;
+checkOut.min = today;
+
+checkIn.addEventListener("change",()=>{
+    checkOut.min = checkIn.value;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Book Room - Aurelia Grand</title>
+
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="/css/fragments.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== ROOT ===== */
+:root {
+    --primary:#2F5D50;
+    --primary-light:#3E7C6D;
+    --accent:#C7A17A;
+    --bg:#F8F6F2;
+    --white:#fff;
+    --text:#1E1E1E;
+    --sub:#6B6B6B;
+    --border:#E5E0DA;
+}
+
+/* ===== GLOBAL ===== */
+body {
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+h1,h2,h3 {
+    font-family:'Playfair Display',serif;
+}
+
+/* ===== HERO (UPGRADED) ===== */
+.hero {
+    height:60vh;
+    background:url('/images/hero/banner1.png') center/cover no-repeat;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+.hero::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        rgba(0,0,0,0.7),
+        rgba(0,0,0,0.55)
+    );
+}
+
+.hero-content {
+    text-align:center;
+    color:#f1ede7;
+    z-index:2;
+}
+
+.hero-content h1 {
+    font-size:clamp(38px,6vw,60px);
+    margin-bottom:10px;
+}
+
+.hero-content p {
+    font-size:16px;
+    opacity:0.9;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    max-width:1200px;
+    margin:auto;
+    padding:60px 20px;
+}
+
+/* ===== GRID ===== */
+.booking-layout {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:35px;
+}
+
+/* ===== CARD ===== */
+.form-box,.summary-box {
+    background:var(--white);
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.06);
+    border:1px solid var(--border);
+    transition:.3s;
+}
+
+.form-box:hover,.summary-box:hover {
+    transform:translateY(-6px);
+}
+
+/* ===== INPUT ===== */
+input {
+    width:100%;
+    padding:12px;
+    margin:8px 0 15px;
+    border-radius:8px;
+    border:1px solid var(--border);
+}
+
+input:focus {
+    border-color:var(--primary);
+    outline:none;
+}
+
+/* ===== BUTTON ===== */
+.btn {
+    width:100%;
+    padding:14px;
+    background:var(--primary);
+    color:white;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+}
+
+.btn:hover {
+    background:var(--primary-light);
+}
+
+/* ===== SUMMARY ===== */
+.summary-box ul {
+    padding-left:18px;
+    color:var(--sub);
+    font-size:14px;
+}
+
+.summary-box li {
+    margin-bottom:5px;
+}
+
+.summary-box p {
+    margin:8px 0;
+    color:var(--sub);
+}
+
+.price {
+    font-size:24px;
+    color:var(--primary);
+    font-weight:600;
+}
+
+/* ===== DIVIDER ===== */
+hr {
+    border:none;
+    border-top:1px solid var(--border);
+    margin:15px 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+    .booking-layout {
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div th:replace="~{user/fragments :: navbar}"></div>
+
+<!-- 🔥 HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Reserve Your Luxury Stay</h1>
+        <p>Experience comfort, elegance & world-class hospitality</p>
+    </div>
+</section>
+
+<div class="container">
+
+<div class="booking-layout">
+
+<!-- ================= FORM ================= -->
+<div class="form-box">
+
+<h2>Booking Details</h2>
+
+<form th:action="@{/user/bookRoom}" method="post">
+
+<div th:if="${param.error}" style="color:red;">
+<p th:text="${param.error}"></p>
+</div>
+
+<input type="hidden" name="roomId" th:value="${room.id}">
+
+<label>Check In</label>
+<input type="date" id="checkIn" name="checkIn" required>
+
+<label>Check Out</label>
+<input type="date" id="checkOut" name="checkOut" required>
+
+<label>Guests</label>
+<input type="number" name="guests" min="1" value="1">
+
+<h3>Guest Details</h3>
+
+<input type="text" name="guestName" placeholder="Full Name" required>
+<input type="text" name="phone" placeholder="Phone Number" required>
+<input type="email" name="email" placeholder="Email (optional)">
+<input type="text" name="specialRequest" placeholder="Special Request">
+
+<h3>Select Services</h3>
+<div th:each="s : ${services}">
+<label>
+<input type="checkbox" name="services"
+th:value="${s.id}"
+th:attr="data-price=${s.price}, data-name=${s.name}">
+<span th:text="${s.name}"></span>
+(₹<span th:text="${s.price}"></span>)
+</label>
+</div>
+
+<h3>Select Events</h3>
+<div th:each="e : ${events}">
+<label>
+<input type="checkbox" name="events"
+th:value="${e.id}"
+th:attr="data-price=${e.price}, data-name=${e.name}">
+<span th:text="${e.name}"></span>
+(₹<span th:text="${e.price}"></span>)
+</label>
+</div>
+
+<button type="submit" class="btn">Proceed to Payment</button>
+
+</form>
+</div>
+
+<!-- ================= SUMMARY ================= -->
+<div class="summary-box">
+
+<h2>Booking Summary</h2>
+
+<h3 th:text="${room.type}"></h3>
+
+<p>Price per night: ₹<span id="price" th:text="${room.price}"></span></p>
+<p>Total Nights: <span id="nights">0</span></p>
+
+<hr>
+
+<p><strong>Selected Services:</strong></p>
+<ul id="serviceList"></ul>
+
+<p><strong>Selected Events:</strong></p>
+<ul id="eventList"></ul>
+
+<hr>
+
+<p>Room Total: ₹<span id="roomTotal">0</span></p>
+<p>Services Total: ₹<span id="serviceTotal">0</span></p>
+<p>Events Total: ₹<span id="eventTotal">0</span></p>
+
+<hr>
+
+<p>Subtotal: ₹<span id="subtotal">0</span></p>
+<p>Tax (10%): ₹<span id="tax">0</span></p>
+
+<p class="price">
+Final Amount: ₹<span id="finalTotal">0</span>
+</p>
+
+</div>
+
+</div>
+</div>
+
+<div th:replace="~{user/fragments :: footer}"></div>
+
+<script>
+
+const checkIn = document.getElementById("checkIn");
+const checkOut = document.getElementById("checkOut");
+
+const price = parseInt(document.getElementById("price").innerText);
+
+const serviceCheckboxes = document.querySelectorAll("input[name='services']");
+const eventCheckboxes = document.querySelectorAll("input[name='events']");
+
+function calculate(){
+
+let inDate = new Date(checkIn.value);
+let outDate = new Date(checkOut.value);
+
+if(checkIn.value && checkOut.value && outDate > inDate){
+
+let days = (outDate - inDate)/(1000*60*60*24);
+
+let roomTotal = days * price;
+
+let serviceTotal = 0;
+let serviceList = "";
+
+serviceCheckboxes.forEach(cb=>{
+if(cb.checked){
+serviceTotal += parseInt(cb.dataset.price);
+serviceList += `<li>${cb.dataset.name} - ₹${cb.dataset.price}</li>`;
+}
+});
+
+let eventTotal = 0;
+let eventList = "";
+
+eventCheckboxes.forEach(cb=>{
+if(cb.checked){
+eventTotal += parseInt(cb.dataset.price);
+eventList += `<li>${cb.dataset.name} - ₹${cb.dataset.price}</li>`;
+}
+});
+
+let subtotal = roomTotal + serviceTotal + eventTotal;
+let tax = subtotal * 0.10;
+let finalTotal = subtotal + tax;
+
+document.getElementById("nights").innerText = days;
+document.getElementById("roomTotal").innerText = roomTotal;
+document.getElementById("serviceTotal").innerText = serviceTotal;
+document.getElementById("eventTotal").innerText = eventTotal;
+document.getElementById("subtotal").innerText = subtotal;
+document.getElementById("tax").innerText = Math.round(tax);
+document.getElementById("finalTotal").innerText = Math.round(finalTotal);
+
+document.getElementById("serviceList").innerHTML = serviceList || "<li>None</li>";
+document.getElementById("eventList").innerHTML = eventList || "<li>None</li>";
+}
+}
+
+// DATE CONTROL
+const today = new Date().toISOString().split("T")[0];
+checkIn.setAttribute("min", today);
+checkOut.setAttribute("min", today);
+
+checkIn.addEventListener("change", ()=>{
+checkOut.value="";
+checkOut.setAttribute("min",checkIn.value);
+calculate();
+});
+
+checkOut.addEventListener("change", calculate);
+serviceCheckboxes.forEach(cb=>cb.addEventListener("change",calculate));
+eventCheckboxes.forEach(cb=>cb.addEventListener("change",calculate));
+
+</script>
+
+</body>
+</html>
