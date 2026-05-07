@@ -74,7 +74,7 @@ server.port=8080
 Clone Repository
 
 bash
-git clone https://github.com/YOUR_USERNAME/AureliaGrandHotel.git
+git clone https://github.com/dhruvipatel050507-cmyk/AureliaGrandHotel.git
 
 
 ## Step 2
@@ -118,19 +118,19 @@ http://localhost:8080/user/home
 
 
 ## 🛏 Rooms Page
-![Rooms](screenshots/rooms.png)
+![Rooms](SCREENSHOTS/Rooms.png)
 
 
-## 💳 Booking Page
-![Booking](screenshots/booking.png)
+## 💳  Admin Booking Page
+![Booking](SCREENSHOTS/Admin-Rooms.png)
 
 
 ## 🍽 Restaurant Page
-![Restaurant](screenshots/restaurant.png)
+![Restaurant](SCREENSHOTS/Restuarant.png)
 
 
 ## 📊 Admin Dashboard
-![Dashboard](screenshots/admin-dashboard.png)
+![Dashboard](SCREENSHOTS/Admin-dashboard.png)
 
 
 # 👨‍💻 Developer
